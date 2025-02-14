@@ -1,10 +1,3 @@
-# Solar System Explorer - Technical Architecture
-
-## High-Level Architecture
-
-The Solar System Explorer is built using a modern full-stack architecture with the following key components:
-
-```
 ┌─────────────────┐         ┌─────────────────┐         ┌─────────────────┐
 │   React Client  │ ←────── │  Express Server │ ←────── │   PostgreSQL    │
 │   (Frontend)    │         │   (Backend)     │         │   Database      │
@@ -48,7 +41,7 @@ The Solar System Explorer is built using a modern full-stack architecture with t
 
 ## Key Components Walkthrough
 
-### 1. Database Schema (`shared/schema.ts`)
+### Database Schema (`shared/schema.ts`)
 ```typescript
 // Planet table definition with all necessary fields
 export const planets = pgTable("planets", {
@@ -63,7 +56,7 @@ export const planets = pgTable("planets", {
 });
 ```
 
-### 2. Backend API (`server/routes.ts`)
+### Backend API (`server/routes.ts`)
 ```typescript
 // RESTful endpoints for planet data
 app.get("/api/planets", async (_req, res) => {
@@ -80,10 +73,10 @@ app.get("/api/planets/:id", async (req, res) => {
 });
 ```
 
-### 3. Frontend Components
+### Frontend Components
 
 #### Solar System Visualization (`components/solar-system.tsx`)
-- Interactive 3D-style visualization of planets
+- Interactive visualization of planets
 - Uses Framer Motion for animations
 - Implements planet orbits and scaling
 
@@ -116,47 +109,3 @@ Example:
 const { data: planets, isLoading } = useQuery<Planet[]>({
   queryKey: ["/api/planets"]
 });
-```
-
-## Styling Strategy
-
-- **Tailwind CSS** for utility-first styling
-- **shadcn/ui** for consistent component design
-- **theme.json** for customizable theming
-
-## Performance Considerations
-
-1. **Database**
-   - Indexed planet ordering
-   - Efficient query patterns
-
-2. **Frontend**
-   - Optimized animations
-   - Lazy-loaded routes
-   - Responsive image loading
-
-## Development Workflow
-
-1. Schema updates using Drizzle
-2. API endpoint implementation
-3. Frontend component development
-4. Integration testing
-
-## Security
-
-- Input validation using Zod schemas
-- Type safety across full stack
-- Secure database connections
-
-## Future Considerations
-
-1. **Scaling**
-   - Caching layer
-   - Image optimization
-   - Server-side rendering
-
-2. **Features**
-   - Interactive quizzes
-   - 3D planet models
-   - Voice narration
-   - Space facts and trivia

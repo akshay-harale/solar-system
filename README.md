@@ -55,6 +55,11 @@ npm start
 - `/client/src/pages` - Page components
 - `/client/src/lib` - Utility functions and configurations
 
+## Documentation
+
+For detailed technical documentation and architecture overview, please refer to:
+- [Architecture Documentation](docs/ARCHITECTURE.md)
+
 ## Database Schema
 
 The application uses a PostgreSQL database with the following schema:
