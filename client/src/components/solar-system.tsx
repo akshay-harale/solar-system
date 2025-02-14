@@ -40,7 +40,7 @@ export default function SolarSystem({ planets }: Props) {
       </div>
 
       {/* Planets */}
-      <TooltipProvider>
+      <TooltipProvider delayDuration={100}>
         {planets.map((planet) => (
           <motion.div
             key={planet.id}
@@ -59,10 +59,9 @@ export default function SolarSystem({ planets }: Props) {
               repeat: Infinity,
               ease: "linear",
             }}
-            onClick={() => handlePlanetClick(planet.id)}
           >
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <motion.div
                   className="absolute"
                   style={{
@@ -76,6 +75,7 @@ export default function SolarSystem({ planets }: Props) {
                     scale: 1.2,
                     filter: "brightness(1.5)",
                   }}
+                  onClick={() => handlePlanetClick(planet.id)}
                 />
               </TooltipTrigger>
               <TooltipContent>
