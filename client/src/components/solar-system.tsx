@@ -1,5 +1,11 @@
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Planet } from "@shared/schema";
 import { playSelect } from "../lib/sounds";
 
@@ -34,42 +40,51 @@ export default function SolarSystem({ planets }: Props) {
       </div>
 
       {/* Planets */}
-      {planets.map((planet) => (
-        <motion.div
-          key={planet.id}
-          className="absolute left-1/2 top-1/2 cursor-pointer"
-          style={{
-            width: `${planet.orderFromSun * 100}px`,
-            height: `${planet.orderFromSun * 100}px`,
-            marginLeft: `-${planet.orderFromSun * 50}px`,
-            marginTop: `-${planet.orderFromSun * 50}px`,
-          }}
-          animate={{
-            rotate: 360,
-          }}
-          transition={{
-            duration: planet.orderFromSun * 10,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          onClick={() => handlePlanetClick(planet.id)}
-        >
+      <TooltipProvider>
+        {planets.map((planet) => (
           <motion.div
-            className="absolute"
+            key={planet.id}
+            className="absolute left-1/2 top-1/2 cursor-pointer"
             style={{
-              width: `${planet.size / 2}px`,
-              height: `${planet.size / 2}px`,
-              backgroundColor: planet.color,
-              borderRadius: "50%",
-              filter: "brightness(1.2)",
+              width: `${planet.orderFromSun * 100}px`,
+              height: `${planet.orderFromSun * 100}px`,
+              marginLeft: `-${planet.orderFromSun * 50}px`,
+              marginTop: `-${planet.orderFromSun * 50}px`,
             }}
-            whileHover={{
-              scale: 1.2,
-              filter: "brightness(1.5)",
+            animate={{
+              rotate: 360,
             }}
-          />
-        </motion.div>
-      ))}
+            transition={{
+              duration: planet.orderFromSun * 10,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            onClick={() => handlePlanetClick(planet.id)}
+          >
+            <Tooltip>
+              <TooltipTrigger>
+                <motion.div
+                  className="absolute"
+                  style={{
+                    width: `${planet.size / 2}px`,
+                    height: `${planet.size / 2}px`,
+                    backgroundColor: planet.color,
+                    borderRadius: "50%",
+                    filter: "brightness(1.2)",
+                  }}
+                  whileHover={{
+                    scale: 1.2,
+                    filter: "brightness(1.5)",
+                  }}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="font-bold">{planet.name}</p>
+              </TooltipContent>
+            </Tooltip>
+          </motion.div>
+        ))}
+      </TooltipProvider>
     </div>
   );
 }
