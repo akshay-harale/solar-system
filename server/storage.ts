@@ -1,19 +1,27 @@
 import { planets, type Planet, type InsertPlanet } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   getAllPlanets(): Promise<Planet[]>;
   getPlanet(id: number): Promise<Planet | undefined>;
 }
 
-export class MemStorage implements IStorage {
-  private planets: Map<number, Planet>;
-
-  constructor() {
-    this.planets = new Map();
-    this.initializePlanets();
+export class DatabaseStorage implements IStorage {
+  async getAllPlanets(): Promise<Planet[]> {
+    const planetList = await db.select().from(planets)
+      .orderBy(planets.orderFromSun);
+    return planetList;
   }
 
-  private initializePlanets() {
+  async getPlanet(id: number): Promise<Planet | undefined> {
+    const [planet] = await db.select().from(planets)
+      .where(eq(planets.id, id));
+    return planet || undefined;
+  }
+
+  // Initialize database with sample planets
+  async initializePlanets() {
     const initialPlanets: InsertPlanet[] = [
       {
         name: "Mercury",
@@ -33,22 +41,22 @@ export class MemStorage implements IStorage {
         color: "#DEB887",
         size: 95
       },
-      // Add other planets similarly...
+      // Add other planets...
     ];
 
-    initialPlanets.forEach((planet, index) => {
-      this.planets.set(index + 1, { ...planet, id: index + 1 });
-    });
-  }
+    for (const planet of initialPlanets) {
+      const existing = await db.select()
+        .from(planets)
+        .where(eq(planets.name, planet.name));
 
-  async getAllPlanets(): Promise<Planet[]> {
-    return Array.from(this.planets.values())
-      .sort((a, b) => a.orderFromSun - b.orderFromSun);
-  }
-
-  async getPlanet(id: number): Promise<Planet | undefined> {
-    return this.planets.get(id);
+      if (existing.length === 0) {
+        await db.insert(planets).values(planet);
+      }
+    }
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
+
+// Initialize planets when the file is imported
+storage.initializePlanets().catch(console.error);
