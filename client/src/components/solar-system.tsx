@@ -40,16 +40,17 @@ export default function SolarSystem({ planets }: Props) {
       </div>
 
       {/* Planets */}
-      <TooltipProvider delayDuration={100}>
+      <TooltipProvider delayDuration={0}>
         {planets.map((planet) => (
           <motion.div
             key={planet.id}
-            className="absolute left-1/2 top-1/2 cursor-pointer"
+            className="absolute left-1/2 top-1/2"
             style={{
               width: `${planet.orderFromSun * 100}px`,
               height: `${planet.orderFromSun * 100}px`,
               marginLeft: `-${planet.orderFromSun * 50}px`,
               marginTop: `-${planet.orderFromSun * 50}px`,
+              zIndex: 10,
             }}
             animate={{
               rotate: 360,
@@ -63,7 +64,7 @@ export default function SolarSystem({ planets }: Props) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <motion.div
-                  className="absolute"
+                  className="absolute cursor-pointer"
                   style={{
                     width: `${planet.size / 2}px`,
                     height: `${planet.size / 2}px`,
@@ -78,7 +79,10 @@ export default function SolarSystem({ planets }: Props) {
                   onClick={() => handlePlanetClick(planet.id)}
                 />
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent 
+                className="bg-black/90 text-white border-white/20 z-50"
+                side="top"
+              >
                 <p className="font-bold">{planet.name}</p>
               </TooltipContent>
             </Tooltip>
